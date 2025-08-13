@@ -1,5 +1,4 @@
 # Sistem RME (Rekam Medis Elektronik) Klinik
-CREATE BY HANAFI
 
 Sistem Rekam Medis Elektronik sederhana untuk klinik dengan fitur lengkap manajemen pasien, dokter, jadwal, dan rekam medis.
 

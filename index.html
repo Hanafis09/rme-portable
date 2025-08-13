@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RME Klinik - Sistem Rekam Medis Elektronik</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-hospital-user me-2"></i>
+                RME Klinik
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" onclick="showPage('dashboard')">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('patients')">
+                            <i class="fas fa-users me-1"></i>Pasien
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('appointments')">
+                            <i class="fas fa-calendar-alt me-1"></i>Jadwal
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('doctors')">
+                            <i class="fas fa-user-md me-1"></i>Dokter
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('reports')">
+                            <i class="fas fa-chart-bar me-1"></i>Laporan
+                        </a>
+                    </li>
+                </ul>
+                <div class="navbar-text">
+                    <i class="fas fa-user-circle me-1"></i>
+                    Admin Klinik
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-3">
+        <!-- Dashboard Page -->
+        <div id="dashboard-page" class="page-content active">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h2><i class="fas fa-tachometer-alt me-2"></i>Dashboard</h2>
+                </div>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 id="total-patients">0</h4>
+                                    <p class="mb-0">Total Pasien</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-users fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 id="today-appointments">0</h4>
+                                    <p class="mb-0">Jadwal Hari Ini</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-calendar-check fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 id="total-doctors">0</h4>
+                                    <p class="mb-0">Total Dokter</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-user-md fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 id="pending-appointments">0</h4>
+                                    <p class="mb-0">Menunggu</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-clock fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-calendar-alt me-2"></i>Jadwal Hari Ini</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="today-schedule" class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Waktu</th>
+                                            <th>Pasien</th>
+                                            <th>Dokter</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="today-schedule-body">
+                                        <tr>
+                                            <td colspan="4" class="text-center text-muted">
+                                                Tidak ada jadwal hari ini
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-bell me-2"></i>Notifikasi</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="notifications">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Selamat datang di sistem RME Klinik!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patients Page -->
+        <div id="patients-page" class="page-content">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h2><i class="fas fa-users me-2"></i>Data Pasien</h2>
+                </div>
+                <div class="col-md-6 text-end">
+                    <button class="btn btn-primary" onclick="showPatientModal()">
+                        <i class="fas fa-plus me-1"></i>Tambah Pasien
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Daftar Pasien</h5>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <input type="text" id="patient-search" class="form-control" placeholder="Cari pasien...">
+                                <button class="btn btn-outline-secondary" onclick="searchPatients()">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>No. RM</th>
+                                    <th>Nama</th>
+                                    <th>Tanggal Lahir</th>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Telepon</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="patients-table-body">
+                                <!-- Data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointments Page -->
+        <div id="appointments-page" class="page-content">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h2><i class="fas fa-calendar-alt me-2"></i>Jadwal Kunjungan</h2>
+                </div>
+                <div class="col-md-6 text-end">
+                    <button class="btn btn-primary" onclick="showAppointmentModal()">
+                        <i class="fas fa-plus me-1"></i>Buat Jadwal
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Daftar Jadwal</h5>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="date" id="appointment-date-filter" class="form-control" onchange="filterAppointments()">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Waktu</th>
+                                    <th>Pasien</th>
+                                    <th>Dokter</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="appointments-table-body">
+                                <!-- Data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Doctors Page -->
+        <div id="doctors-page" class="page-content">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h2><i class="fas fa-user-md me-2"></i>Data Dokter</h2>
+                </div>
+                <div class="col-md-6 text-end">
+                    <button class="btn btn-primary" onclick="showDoctorModal()">
+                        <i class="fas fa-plus me-1"></i>Tambah Dokter
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5>Daftar Dokter</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nama</th>
+                                    <th>Spesialisasi</th>
+                                    <th>SIP</th>
+                                    <th>Telepon</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="doctors-table-body">
+                                <!-- Data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Page -->
+        <div id="reports-page" class="page-content">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h2><i class="fas fa-chart-bar me-2"></i>Laporan</h2>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Filter Laporan</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="form-label">Dari Tanggal</label>
+                                    <input type="date" id="report-from-date" class="form-control">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Sampai Tanggal</label>
+                                    <input type="date" id="report-to-date" class="form-control">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Jenis Laporan</label>
+                                    <select id="report-type" class="form-select">
+                                        <option value="visits">Kunjungan</option>
+                                        <option value="patients">Pasien Baru</option>
+                                        <option value="doctors">Aktivitas Dokter</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">&nbsp;</label>
+                                    <div>
+                                        <button class="btn btn-primary" onclick="generateReport()">
+                                            <i class="fas fa-chart-line me-1"></i>Generate
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Hasil Laporan</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="report-results">
+                                <p class="text-muted text-center">Pilih filter dan klik "Generate" untuk melihat laporan</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Patient Modal -->
+    <div class="modal fade" id="patientModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-user-plus me-2"></i>
+                        <span id="patient-modal-title">Tambah Pasien</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="patient-form">
+                        <input type="hidden" id="patient-id">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">No. Rekam Medis</label>
+                                    <input type="text" id="patient-rm" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">NIK</label>
+                                    <input type="text" id="patient-nik" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label class="form-label">Nama Lengkap</label>
+                                    <input type="text" id="patient-name" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">Jenis Kelamin</label>
+                                    <select id="patient-gender" class="form-select" required>
+                                        <option value="">Pilih</option>
+                                        <option value="L">Laki-laki</option>
+                                        <option value="P">Perempuan</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Tanggal Lahir</label>
+                                    <input type="date" id="patient-birthdate" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Telepon</label>
+                                    <input type="tel" id="patient-phone" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Alamat</label>
+                            <textarea id="patient-address" class="form-control" rows="3" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" onclick="savePatient()">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointment Modal -->
+    <div class="modal fade" id="appointmentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-calendar-plus me-2"></i>Buat Jadwal
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="appointment-form">
+                        <input type="hidden" id="appointment-id">
+                        <div class="mb-3">
+                            <label class="form-label">Pasien</label>
+                            <select id="appointment-patient" class="form-select" required>
+                                <option value="">Pilih Pasien</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Dokter</label>
+                            <select id="appointment-doctor" class="form-select" required>
+                                <option value="">Pilih Dokter</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Tanggal</label>
+                                    <input type="date" id="appointment-date" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Waktu</label>
+                                    <input type="time" id="appointment-time" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Keluhan</label>
+                            <textarea id="appointment-complaint" class="form-control" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" onclick="saveAppointment()">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Doctor Modal -->
+    <div class="modal fade" id="doctorModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-user-md me-2"></i>Tambah Dokter
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="doctor-form">
+                        <input type="hidden" id="doctor-id">
+                        <div class="mb-3">
+                            <label class="form-label">Nama Dokter</label>
+                            <input type="text" id="doctor-name" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Spesialisasi</label>
+                            <input type="text" id="doctor-specialty" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">No. SIP</label>
+                            <input type="text" id="doctor-sip" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Telepon</label>
+                            <input type="tel" id="doctor-phone" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select id="doctor-status" class="form-select" required>
+                                <option value="active">Aktif</option>
+                                <option value="inactive">Tidak Aktif</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" onclick="saveDoctor()">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Medical Record Modal -->
+    <div class="modal fade" id="medicalRecordModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-file-medical me-2"></i>Rekam Medis - <span id="mr-patient-name"></span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" id="medicalRecordTabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#history">Riwayat</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#new-record">Pemeriksaan Baru</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content mt-3">
+                        <div class="tab-pane fade show active" id="history">
+                            <div id="medical-history">
+                                <!-- Medical history will be loaded here -->
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="new-record">
+                            <form id="medical-record-form">
+                                <input type="hidden" id="mr-patient-id">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Dokter Pemeriksa</label>
+                                            <select id="mr-doctor" class="form-select" required>
+                                                <option value="">Pilih Dokter</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Tanggal Pemeriksaan</label>
+                                            <input type="datetime-local" id="mr-date" class="form-control" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Keluhan Utama</label>
+                                    <textarea id="mr-complaint" class="form-control" rows="2" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Pemeriksaan Fisik</label>
+                                    <textarea id="mr-examination" class="form-control" rows="3"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Diagnosis</label>
+                                    <textarea id="mr-diagnosis" class="form-control" rows="2" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Terapi/Obat</label>
+                                    <textarea id="mr-therapy" class="form-control" rows="3"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Catatan</label>
+                                    <textarea id="mr-notes" class="form-control" rows="2"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-primary" onclick="saveMedicalRecord()">Simpan Rekam Medis</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
